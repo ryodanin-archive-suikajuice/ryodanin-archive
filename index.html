@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHOST :: FAN ARCHIVE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e0c;
+    --bg2: #111713;
+    --line: #28342d;
+    --green: #7dffc2;
+    --green-dim: #5fcf95;
+    --text: #f3f6f4;
+    --text-dim: #aab3ad;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-attachment: fixed;
+    line-height: 1.7;
+  }
+
+  .mono { font-family: 'Share Tech Mono', monospace; }
+
+  /* ── Top bar ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(10,14,12,0.95);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+
+  .topbar .logo {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--green);
+  }
+
+  .topbar .logo span { color: var(--text-dim); }
+
+  .topbar .net {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--green-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 64px 20px 44px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green-dim);
+    letter-spacing: 0.2em;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  @media (min-width: 640px) { .hero h1 { font-size: 42px; } }
+
+  .hero h1 .accent { color: var(--green); }
+  .hero h1 .divider { color: var(--text-dim); font-weight: 400; margin: 0 6px; }
+
+  .hero .sub {
+    margin-top: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .hero .scanline {
+    width: 64px;
+    height: 2px;
+    background: var(--green);
+    margin: 24px auto 0;
+    opacity: 0.7;
+  }
+
+  /* ── Unofficial notice (system message style) ── */
+  .sys-notice {
+    margin: 24px auto 0;
+    max-width: 520px;
+    border: 1px solid var(--green-dim);
+    background: var(--bg2);
+    padding: 14px 16px;
+    text-align: left;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+  }
+
+  .sys-notice .sys-head {
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .sys-notice .sys-head::before {
+    content: '> ';
+  }
+
+  /* ── Section ── */
+  .section {
+    padding: 36px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (min-width: 640px) { .section { padding: 44px 48px; } }
+  @media (min-width: 1024px) { .section { padding: 48px 96px; } }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .section-head .idx {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .section-head h2 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
+  }
+
+  .section-head .line {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── Artist cards ── */
+  .artist-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  @media (min-width: 640px) {
+    .artist-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  }
+
+  .artist-card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    padding: 20px;
+    position: relative;
+  }
+
+  .artist-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 18px; height: 18px;
+    border-top: 2px solid var(--green);
+    border-left: 2px solid var(--green);
+  }
+
+  .artist-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 18px; height: 18px;
+    border-bottom: 2px solid var(--green);
+    border-right: 2px solid var(--green);
+  }
+
+  .artist-card .label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .artist-card .name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .artist-card .role {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .link-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .link-chip {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 14px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(125,255,194,0.06);
+    border: 1px solid var(--green);
+    border-radius: 3px;
+    color: var(--green);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .link-chip:hover, .link-chip:active {
+    background: var(--green);
+    color: #06120c;
+  }
+
+  .link-chip .arrow { font-size: 13px; }
+
+  /* ── YouTube embed block ── */
+  .yt-block {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    padding: 16px;
+  }
+
+  .yt-frame {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Content nav grid ── */
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  @media (min-width: 640px) {
+    .nav-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .nav-card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 18px 16px;
+    min-height: 100px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, background 0.15s;
+    display: block;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-card:hover, .nav-card:active {
+    border-color: var(--green);
+    background: rgba(125,255,194,0.05);
+  }
+
+  .nav-card .num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+
+  .nav-card .title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .nav-card .desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .nav-card .go-arrow {
+    position: absolute;
+    top: 16px;
+    right: 14px;
+    font-size: 14px;
+    color: var(--green-dim);
+  }
+
+  /* ── Latest feed strip ── */
+  .feed-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .feed-item {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+
+  .feed-item:last-child { border-bottom: none; }
+
+  .feed-item .date {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+
+  .feed-item .txt { color: var(--text); font-weight: 500; }
+  .feed-item .src {
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: auto;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 28px 20px;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--green-dim);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">GHOST<span>_ARCHIVE</span></div>
+  <div class="net mono">NET STATUS: ONLINE</div>
+</div>
+
+<div class="hero">
+  <div class="tag mono">UNOFFICIAL FAN ARCHIVE</div>
+  <h1>導凰<span class="divider">×</span><span class="accent">朔雀</span></h1>
+  <div class="sub mono">LABEL: はまこれ // EST. 2025</div>
+  <div class="scanline"></div>
+  <div class="sys-notice">
+    <div class="sys-head mono">SYSTEM NOTICE</div>
+    本サイトは個人運営の非公式ファンサイトです。アーティスト本人・所属レーベルとは一切関係ありません。<br>
+    This is an unofficial, fan-operated archive. Not affiliated with the artists or their label.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <span class="idx mono">01</span>
+    <h2>ARTIST PROFILE</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="artist-grid">
+    <div class="artist-card">
+      <div class="label mono">ARTIST</div>
+      <div class="name">導凰</div>
+      <div class="link-row">
+        <a class="link-chip mono" href="#">OFFICIAL<span class="arrow">↗</span></a>
+        <a class="link-chip mono" href="#">X / TWITTER<span class="arrow">↗</span></a>
+      </div>
+    </div>
+    <div class="artist-card">
+      <div class="label mono">ARTIST</div>
+      <div class="name">朔雀</div>
+      <div class="link-row">
+        <a class="link-chip mono" href="#">OFFICIAL<span class="arrow">↗</span></a>
+        <a class="link-chip mono" href="#">X / TWITTER<span class="arrow">↗</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <span class="idx mono">02</span>
+    <h2>PLAYLIST</h2>
+    <div class="line"></div>
+  </div>
+  <div class="yt-block">
+    <div class="yt-frame mono">YOUTUBE PLAYLIST EMBED</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <span class="idx mono">03</span>
+    <h2>ARCHIVE INDEX</h2>
+    <div class="line"></div>
+  </div>
+  <div class="nav-grid">
+    <a class="nav-card" href="#">
+      <span class="go-arrow">→</span>
+      <div class="num mono">[ A ]</div>
+      <div class="title">TWEET GALLERY</div>
+      <div class="desc">キュレーションされたポスト一覧</div>
+    </a>
+    <a class="nav-card" href="#">
+      <span class="go-arrow">→</span>
+      <div class="num mono">[ B ]</div>
+      <div class="title">PRESS / 掲載記事</div>
+      <div class="desc">メディア掲載のまとめ</div>
+    </a>
+    <a class="nav-card" href="#">
+      <span class="go-arrow">→</span>
+      <div class="num mono">[ C ]</div>
+      <div class="title">TIE-UP WORKS</div>
+      <div class="desc">タイアップ作品の情報</div>
+    </a>
+    <a class="nav-card" href="#">
+      <span class="go-arrow">→</span>
+      <div class="num mono">[ D ]</div>
+      <div class="title">RELATED CREATORS</div>
+      <div class="desc">関連クリエイターまとめ</div>
+    </a>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <span class="idx mono">04</span>
+    <h2>LATEST LOG</h2>
+    <div class="line"></div>
+  </div>
+  <div class="feed-strip">
+    <div class="feed-item">
+      <span class="date mono">06.25</span>
+      <span class="txt">導凰デビュー</span>
+      <span class="src mono">NEWS</span>
+    </div>
+    <div class="feed-item">
+      <span class="date mono">07.30</span>
+      <span class="txt">朔雀デビュー</span>
+      <span class="src mono">NEWS</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  ※ THIS IS AN UNOFFICIAL FAN ARCHIVE SITE<br>
+  NOT AFFILIATED WITH THE ARTISTS OR THEIR LABEL
+</footer>
+
+</body>
+</html>
