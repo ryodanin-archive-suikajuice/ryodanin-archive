@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GHOST :: FAN ARCHIVE</title>
+<title>はまこれ 非公式ファンサイト</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 
@@ -12,11 +12,12 @@
   :root {
     --bg: #0a0e0c;
     --bg2: #111713;
-    --line: #28342d;
+    --line: #3d5247;
     --green: #7dffc2;
     --green-dim: #5fcf95;
     --text: #f3f6f4;
-    --text-dim: #aab3ad;
+    --text-dim: #c2c9c4;
+    --content-max: 560px;
   }
 
   body {
@@ -24,6 +25,7 @@
     color: var(--text);
     font-family: 'Noto Sans JP', sans-serif;
     min-height: 100vh;
+    /* グリッドは外周のみ — コンテンツ中央は後述のpage-innerで塗りつぶし */
     background-image:
       linear-gradient(var(--line) 1px, transparent 1px),
       linear-gradient(90deg, var(--line) 1px, transparent 1px);
@@ -34,121 +36,167 @@
 
   .mono { font-family: 'Share Tech Mono', monospace; }
 
-  /* ── Top bar ── */
+  /* ── Top bar：中央エリアに揃えてロゴ左・ボタン右 ── */
   .topbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(10,14,12,0.95);
+    justify-content: center;
+    padding: 14px 20px;
+    background: rgba(10,14,12,0.97);
     position: sticky;
     top: 0;
     z-index: 30;
   }
 
-  .topbar .logo {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--green);
+  .topbar-inner {
+    width: 100%;
+    max-width: var(--content-max);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  .topbar .logo span { color: var(--text-dim); }
-
-  .topbar .net {
+  .topbar .logo {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--green-dim);
-    letter-spacing: 0.1em;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--green);
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  .topbar .logo span { color: var(--text-dim); font-weight: 700; }
+
+  .menu-btn {
+    width: 44px; height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+  }
+
+  .menu-btn .bar { width: 20px; height: 3px; background: var(--green); }
+  .menu-btn:hover { border-color: var(--green-dim); }
+
+  /* ── Menu overlay ── */
+  .menu-overlay {
+    position: fixed;
+    top: 0; right: 0;
+    width: 78%; max-width: 300px; height: 100%;
+    background: var(--bg2);
+    border-left: 1px solid var(--green-dim);
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 50;
+    padding: 20px;
+  }
+
+  .menu-overlay.open { transform: translateX(0); }
+
+  .menu-overlay .close-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+
+  .menu-overlay nav a {
+    display: block;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+
+  /* ── 中央コンテナのみグリッド非表示 ── */
+  .page-inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: var(--bg);
+    position: relative;
+  }
+
+  .page-inner--hero {
+    padding-top: 56px;
   }
 
   /* ── Hero ── */
   .hero {
-    padding: 64px 20px 44px;
+    padding: 0;
     text-align: center;
-    border-bottom: 1px solid var(--line);
+    margin-top: 45px;
+  }
+
+  .page-inner--hero {
+    padding-top: 40px;
   }
 
   .hero .tag {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--green-dim);
-    letter-spacing: 0.2em;
-    margin-bottom: 16px;
+    letter-spacing: 0.15em;
+    margin-bottom: 24px;
+    line-height: 1.8;
   }
 
-  .hero h1 {
-    font-size: 34px;
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    color: var(--text);
-    line-height: 1.4;
-  }
-
-  @media (min-width: 640px) { .hero h1 { font-size: 42px; } }
-
-  .hero h1 .accent { color: var(--green); }
-  .hero h1 .divider { color: var(--text-dim); font-weight: 400; margin: 0 6px; }
-
-  .hero .sub {
-    margin-top: 12px;
+  .dot-title {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-dim);
-    letter-spacing: 0.06em;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--green);
+    line-height: 1.8;
   }
 
   .hero .scanline {
-    width: 64px;
-    height: 2px;
+    width: 64px; height: 2px;
     background: var(--green);
-    margin: 24px auto 0;
+    margin: 24px auto;
     opacity: 0.7;
   }
 
-  /* ── Unofficial notice (system message style) ── */
+  /* ── Unofficial notice ── */
   .sys-notice {
-    margin: 24px auto 0;
-    max-width: 520px;
     border: 1px solid var(--green-dim);
     background: var(--bg2);
     padding: 14px 16px;
     text-align: left;
     font-family: 'Share Tech Mono', monospace;
     font-size: 12px;
+    font-weight: 700;
     color: var(--text-dim);
     line-height: 1.8;
-    letter-spacing: 0.01em;
   }
 
-  .sys-notice .sys-head {
-    color: var(--green);
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .sys-notice .sys-head::before {
-    content: '> ';
-  }
+  .sys-notice .sys-head { color: var(--green); font-weight: 700; margin-bottom: 6px; }
+  .sys-notice .sys-head::before { content: '> '; }
 
   /* ── Section ── */
-  .section {
-    padding: 36px 20px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  @media (min-width: 640px) { .section { padding: 44px 48px; } }
-  @media (min-width: 1024px) { .section { padding: 48px 96px; } }
+  .section { padding: 0; }
 
   .section-head {
     display: flex;
     align-items: baseline;
     gap: 12px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
   }
 
   .section-head .idx {
@@ -165,22 +213,8 @@
     color: var(--text);
   }
 
-  .section-head .line {
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-
-  /* ── Artist cards ── */
-  .artist-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  @media (min-width: 640px) {
-    .artist-grid { display: grid; grid-template-columns: 1fr 1fr; }
-  }
+  /* ── Artist / label cards ── */
+  .artist-grid { display: flex; flex-direction: column; gap: 14px; }
 
   .artist-card {
     background: var(--bg2);
@@ -190,209 +224,337 @@
   }
 
   .artist-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
+    content: ''; position: absolute; top: 0; left: 0;
     width: 18px; height: 18px;
-    border-top: 2px solid var(--green);
-    border-left: 2px solid var(--green);
+    border-top: 2px solid var(--green); border-left: 2px solid var(--green);
   }
 
   .artist-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; right: 0;
+    content: ''; position: absolute; bottom: 0; right: 0;
     width: 18px; height: 18px;
-    border-bottom: 2px solid var(--green);
-    border-right: 2px solid var(--green);
+    border-bottom: 2px solid var(--green); border-right: 2px solid var(--green);
   }
 
   .artist-card .label {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--green-dim);
-    letter-spacing: 0.1em;
-    margin-bottom: 10px;
+    font-size: 11px; font-weight: 700;
+    color: var(--green-dim); letter-spacing: 0.1em; margin-bottom: 10px;
   }
 
-  .artist-card .name {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
+  .artist-card .name { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
 
-  .artist-card .role {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-  }
-
-  .link-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+  .link-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
   .link-chip {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 9px 14px;
-    min-height: 40px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(125,255,194,0.06);
-    border: 1px solid var(--green);
-    border-radius: 3px;
-    color: var(--green);
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    transition: background 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
+    font-size: 12px; font-weight: 700;
+    padding: 9px 14px; min-height: 40px;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); border: 1px solid var(--green); border-radius: 3px;
+    color: #06120c; letter-spacing: 0.04em;
+    text-decoration: none; -webkit-tap-highlight-color: transparent;
   }
 
-  .link-chip:hover, .link-chip:active {
-    background: var(--green);
-    color: #06120c;
-  }
-
+  .link-chip:hover, .link-chip:active { background: var(--green-dim); border-color: var(--green-dim); }
   .link-chip .arrow { font-size: 13px; }
 
-  /* ── YouTube embed block ── */
-  .yt-block {
+  /* ── Playlist cards ── */
+  .playlist-grid { display: flex; flex-direction: column; gap: 14px; }
+
+  .playlist-card {
     background: var(--bg2);
     border: 1px solid var(--line);
-    padding: 16px;
-  }
-
-  .yt-frame {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #000;
-    border: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-dim);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-  }
-
-  /* ── Content nav grid ── */
-  .nav-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  @media (min-width: 640px) {
-    .nav-grid { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  .nav-card {
-    background: var(--bg2);
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    padding: 18px 16px;
-    min-height: 100px;
-    text-decoration: none;
-    color: var(--text);
-    transition: border-color 0.15s, background 0.15s;
-    display: block;
+    padding: 20px;
     position: relative;
+    text-decoration: none; color: var(--text); display: block;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .nav-card:hover, .nav-card:active {
-    border-color: var(--green);
-    background: rgba(125,255,194,0.05);
+  .playlist-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 18px; height: 18px;
+    border-top: 2px solid var(--green); border-left: 2px solid var(--green);
   }
 
-  .nav-card .num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--green);
-    margin-bottom: 12px;
+  .playlist-card::after {
+    content: ''; position: absolute; bottom: 0; right: 0;
+    width: 18px; height: 18px;
+    border-bottom: 2px solid var(--green); border-right: 2px solid var(--green);
   }
 
-  .nav-card .title {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
+  .playlist-card:hover { border-color: var(--green); }
 
-  .nav-card .desc {
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
+  .playlist-card-inner { display: flex; align-items: center; gap: 16px; }
 
-  .nav-card .go-arrow {
-    position: absolute;
-    top: 16px;
-    right: 14px;
-    font-size: 14px;
-    color: var(--green-dim);
-  }
-
-  /* ── Latest feed strip ── */
-  .feed-strip {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .feed-item {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 14px;
-    flex-wrap: wrap;
-  }
-
-  .feed-item:last-child { border-bottom: none; }
-
-  .feed-item .date {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--green);
+  .play-icon {
     flex-shrink: 0;
+    width: 44px; height: 44px;
+    border: 2px solid var(--green); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
   }
 
-  .feed-item .txt { color: var(--text); font-weight: 500; }
-  .feed-item .src {
+  .play-icon::after {
+    content: ''; display: block;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 8px 0 8px 16px;
+    border-color: transparent transparent transparent var(--green);
+    margin-left: 3px;
+  }
+
+  .playlist-info { flex: 1; }
+
+  .playlist-label {
+    font-size: 14px; font-weight: 700;
+    color: var(--text); margin-bottom: 4px; letter-spacing: 0.04em;
+  }
+
+  .playlist-open {
+    font-size: 12px; font-weight: 700;
+    color: var(--green-dim); letter-spacing: 0.05em;
+  }
+
+  /* ── Tape buttons：タイトル幅をpaddingのみに抑える ── */
+  .tape-list { display: flex; flex-direction: column; gap: 18px; }
+
+  .tape-btn {
+    display: block;
+    background: var(--bg2);
+    border: 1px solid var(--green);
+    text-decoration: none; color: var(--text);
+    overflow: hidden; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tape-btn:hover .tape-title,
+  .tape-btn:active .tape-title { background: var(--green-dim); }
+
+  .tape-btn .tape-title {
+    display: block;
+    font-size: 15px; font-weight: 700;
+    color: #06120c; background: var(--green);
+    padding: 10px 14px;
+    letter-spacing: 0.03em;
+    transition: background 0.15s;
+    /* タイトルはテキスト分だけの幅 — inline-blockで折り返しを自然に */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tape-btn .tape-desc {
+    display: block;
+    font-size: 13px; font-weight: 700;
     color: var(--text-dim);
-    font-size: 11px;
-    font-weight: 700;
-    margin-left: auto;
-    flex-shrink: 0;
-    letter-spacing: 0.05em;
+    padding: 10px 14px 12px;
+    line-height: 1.5;
+  }
+
+  /* ── Update log ── */
+  .log-empty {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    color: var(--text-dim); text-align: center;
+    padding: 24px 0; letter-spacing: 0.05em;
   }
 
   /* ── Footer ── */
   footer {
-    padding: 28px 20px;
-    text-align: center;
+    padding: 32px 20px; text-align: center;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--green-dim);
-    letter-spacing: 0.08em;
-    line-height: 1.8;
+    font-size: 11px; font-weight: 500;
+    color: var(--green-dim); letter-spacing: 0.08em; line-height: 1.8;
   }
 </style>
 </head>
 <body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">UNOFFICIAL FAN ARCHIVE<span> HAMMER COLLECTIVE</span></div>
+    <button class="menu-btn" onclick="document.getElementById('menuOverlay').classList.add('open')" aria-label="メニューを開く">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+  </div>
+</div>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="close-btn mono" onclick="document.getElementById('menuOverlay').classList.remove('open')">×</button>
+  <nav>
+    <a href="#">TOP</a>
+    <a href="#">OFFICIAL</a>
+    <a href="#">ARTIST</a>
+    <a href="#">TWEET GALLERY</a>
+    <a href="#">PRESS</a>
+    <a href="#">TIE-UP WORKS</a>
+    <a href="#">RELATED CREATORS</a>
+    <a href="#">HISTORY</a>
+  </nav>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="page-inner page-inner--hero">
+    <div class="tag mono">UNOFFICIAL FAN ARCHIVE<br>HAMMER COLLECTIVE</div>
+    <div class="dot-title mono">はまこれ 非公式ファンサイト</div>
+    <div class="scanline"></div>
+    <div class="sys-notice">
+      <div class="sys-head mono">SYSTEM NOTICE</div>
+      本サイトは個人運営の非公式ファンサイトです。アーティスト本人・所属レーベルとは一切関係ありません。<br>
+      This is an unofficial fan archive for Hammer Collective. Not affiliated with the artists or their label.
+    </div>
+  </div>
+</div>
+
+<!-- 01 OFFICIAL -->
+<div class="section">
+  <div class="page-inner">
+    <div class="section-head">
+      <span class="idx mono">01</span>
+      <h2>OFFICIAL</h2>
+    </div>
+    <div class="artist-grid">
+      <div class="artist-card">
+        <div class="label mono">LABEL</div>
+        <div class="name">HAMMER COLLECTIVE</div>
+        <div class="link-row">
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">OFFICIAL<span class="arrow">↗</span></a>
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / TWITTER<span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 02 ARTIST -->
+<div class="section">
+  <div class="page-inner">
+    <div class="section-head">
+      <span class="idx mono">02</span>
+      <h2>ARTIST</h2>
+    </div>
+    <div class="artist-grid">
+      <div class="artist-card">
+        <div class="label mono">ARTIST</div>
+        <div class="name">導凰</div>
+        <div class="link-row">
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">OFFICIAL<span class="arrow">↗</span></a>
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / TWITTER<span class="arrow">↗</span></a>
+        </div>
+      </div>
+      <div class="artist-card">
+        <div class="label mono">ARTIST</div>
+        <div class="name">朔雀</div>
+        <div class="link-row">
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">OFFICIAL<span class="arrow">↗</span></a>
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / TWITTER<span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 03 OFFICIAL PLAYLIST -->
+<div class="section">
+  <div class="page-inner">
+    <div class="section-head">
+      <span class="idx mono">03</span>
+      <h2>OFFICIAL PLAYLIST</h2>
+    </div>
+    <div class="playlist-grid">
+      <a class="playlist-card" href="https://youtube.com/playlist?list=PLnDVujTGOaf_o7PzlUTCgJ2WKI6YbFPSJ" target="_blank" rel="noopener">
+        <div class="playlist-card-inner">
+          <span class="play-icon" aria-hidden="true"></span>
+          <div class="playlist-info">
+            <div class="playlist-label mono">PLAYLIST 01　【導凰 - TAO】MV</div>
+            <div class="playlist-open mono">YouTubeで開く ↗</div>
+          </div>
+        </div>
+      </a>
+      <a class="playlist-card" href="https://youtube.com/playlist?list=PLnDVujTGOaf8tQp1H81pLirbIg9o8WeLz" target="_blank" rel="noopener">
+        <div class="playlist-card-inner">
+          <span class="play-icon" aria-hidden="true"></span>
+          <div class="playlist-info">
+            <div class="playlist-label mono">PLAYLIST 02　【導凰 - TAO】歌ってみた</div>
+            <div class="playlist-open mono">YouTubeで開く ↗</div>
+          </div>
+        </div>
+      </a>
+      <a class="playlist-card" href="https://youtube.com/playlist?list=PLnDVujTGOaf8NwAJIerGhQBvQ_Vml3bMN" target="_blank" rel="noopener">
+        <div class="playlist-card-inner">
+          <span class="play-icon" aria-hidden="true"></span>
+          <div class="playlist-info">
+            <div class="playlist-label mono">PLAYLIST 03　【朔雀 - SAK】MV</div>
+            <div class="playlist-open mono">YouTubeで開く ↗</div>
+          </div>
+        </div>
+      </a>
+      <a class="playlist-card" href="https://youtube.com/playlist?list=PLnDVujTGOaf9oY5DmfP785aL8_ptqoyMt" target="_blank" rel="noopener">
+        <div class="playlist-card-inner">
+          <span class="play-icon" aria-hidden="true"></span>
+          <div class="playlist-info">
+            <div class="playlist-label mono">PLAYLIST 04　【朔雀 - SAK】歌ってみた</div>
+            <div class="playlist-open mono">YouTubeで開く ↗</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 04 ARCHIVE INDEX -->
+<div class="section">
+  <div class="page-inner">
+    <div class="section-head">
+      <span class="idx mono">04</span>
+      <h2>ARCHIVE INDEX</h2>
+    </div>
+    <div class="tape-list">
+      <a class="tape-btn" href="#">
+        <span class="tape-title">TWEET GALLERY</span>
+        <span class="tape-desc">キュレーションされたポスト一覧</span>
+      </a>
+      <a class="tape-btn" href="#">
+        <span class="tape-title">PRESS / 掲載記事</span>
+        <span class="tape-desc">メディア掲載のまとめ</span>
+      </a>
+      <a class="tape-btn" href="#">
+        <span class="tape-title">TIE-UP WORKS</span>
+        <span class="tape-desc">タイアップ作品の情報</span>
+      </a>
+      <a class="tape-btn" href="#">
+        <span class="tape-title">RELATED CREATORS</span>
+        <span class="tape-desc">関連クリエイターまとめ</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 05 UPDATE LOG -->
+<div class="section">
+  <div class="page-inner">
+    <div class="section-head">
+      <span class="idx mono">05</span>
+      <h2>UPDATE LOG</h2>
+    </div>
+    <div class="log-empty mono">NO LOG ENTRIES YET</div>
+  </div>
+</div>
+
+<footer>
+  ※ THIS IS AN UNOFFICIAL FAN ARCHIVE SITE<br>
+  NOT AFFILIATED WITH THE ARTISTS OR THEIR LABEL
+</footer>
+
+<script>
+  document.addEventListener('click', function(e) {
+    const overlay = document.getElementById('menuOverlay');
+    if (overlay.classList.contains('open') && !overlay.contains(e.target) && !e.target.closest('.menu-btn')) {
+      overlay.classList.remove('open');
+    }
+  });
+</script>
 
 </body>
 </html>
