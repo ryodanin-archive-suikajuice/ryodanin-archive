@@ -258,6 +258,21 @@
   .link-chip:hover, .link-chip:active { background: var(--green-dim); border-color: var(--green-dim); }
   .link-chip .arrow { font-size: 13px; }
 
+  /* X / TWITTER の TWITTER に取り消し線（文字グレー・線は黒） */
+  .link-chip .tw-strike {
+    position: relative;
+    display: inline-block;
+    color: rgba(6,18,12,0.45);
+  }
+  .link-chip .tw-strike::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 2px;
+    background: #06120c;
+    transform: translateY(-50%);
+  }
+
   /* ── Playlist cards ── */
   .playlist-grid { display: flex; flex-direction: column; gap: 14px; }
 
@@ -337,10 +352,28 @@
     padding: 10px 14px;
     letter-spacing: 0.03em;
     transition: background 0.15s;
-    /* タイトルはテキスト分だけの幅 — inline-blockで折り返しを自然に */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .tape-btn .tape-title .pre { margin-right: 8px; }
+
+  .tape-btn .tape-title .t-strike {
+    position: relative; display: inline-block;
+    color: rgba(6,18,12,0.45);
+  }
+
+  .tape-btn .tape-title .t-strike::after {
+    content: ''; position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 2px; background: #06120c;
+    transform: translateY(-50%);
+  }
+
+  .link-chip--x-only {
+    min-width: 120px;
+    justify-content: center;
   }
 
   .tape-btn .tape-desc {
@@ -382,10 +415,10 @@
 <div class="menu-overlay" id="menuOverlay">
   <button class="close-btn mono" onclick="document.getElementById('menuOverlay').classList.remove('open')">×</button>
   <nav>
-    <a href="#">TOP</a>
+    <a href="index.html">TOP</a>
     <a href="#">OFFICIAL</a>
     <a href="#">ARTIST</a>
-    <a href="#">TWEET GALLERY</a>
+    <a href="post_gallery.html">TWEET GALLERY</a>
     <a href="#">PRESS</a>
     <a href="#">TIE-UP WORKS</a>
     <a href="#">RELATED CREATORS</a>
@@ -420,7 +453,7 @@
         <div class="name">HAMMER COLLECTIVE</div>
         <div class="link-row">
           <a class="link-chip mono" href="#" target="_blank" rel="noopener">OFFICIAL<span class="arrow">↗</span></a>
-          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / TWITTER<span class="arrow">↗</span></a>
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / <span class="tw-strike">TWITTER</span><span class="arrow">↗</span></a>
         </div>
       </div>
     </div>
@@ -440,7 +473,7 @@
         <div class="name">導凰</div>
         <div class="link-row">
           <a class="link-chip mono" href="#" target="_blank" rel="noopener">OFFICIAL<span class="arrow">↗</span></a>
-          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / TWITTER<span class="arrow">↗</span></a>
+          <a class="link-chip link-chip--x-only mono" href="#" target="_blank" rel="noopener">X<span class="arrow">↗</span></a>
         </div>
       </div>
       <div class="artist-card">
@@ -448,7 +481,7 @@
         <div class="name">朔雀</div>
         <div class="link-row">
           <a class="link-chip mono" href="#" target="_blank" rel="noopener">OFFICIAL<span class="arrow">↗</span></a>
-          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / TWITTER<span class="arrow">↗</span></a>
+          <a class="link-chip mono" href="#" target="_blank" rel="noopener">X / <span class="tw-strike">TWITTER</span><span class="arrow">↗</span></a>
         </div>
       </div>
     </div>
@@ -511,8 +544,8 @@
       <h2>ARCHIVE INDEX</h2>
     </div>
     <div class="tape-list">
-      <a class="tape-btn" href="#">
-        <span class="tape-title">TWEET GALLERY</span>
+      <a class="tape-btn" href="post_gallery.html">
+        <span class="tape-title"><span class="pre">POST</span><span class="t-strike">TWEET</span> GALLERY</span>
         <span class="tape-desc">キュレーションされたポスト一覧</span>
       </a>
       <a class="tape-btn" href="#">
