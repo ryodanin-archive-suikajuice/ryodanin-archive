@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TWEET ARCHIVE :: はまこれ 非公式ファンサイト</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e0c;
+    --bg2: #111713;
+    --line: #3d5247;
+    --green: #7dffc2;
+    --green-dim: #5fcf95;
+    --text: #f3f6f4;
+    --text-dim: #c2c9c4;
+    --content-max: 560px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-attachment: fixed;
+    line-height: 1.7;
+  }
+
+  .mono { font-family: 'Share Tech Mono', monospace; }
+
+  /* ── Top bar ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    background: rgba(10,14,12,0.97);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+
+  .topbar-inner {
+    width: 100%;
+    max-width: var(--content-max);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar .logo {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--green);
+    line-height: 1.4;
+  }
+
+  .topbar .logo span { color: var(--text-dim); font-weight: 700; }
+
+  .menu-btn {
+    width: 44px; height: 44px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px; background: none;
+    border: 1px solid var(--line);
+    cursor: pointer; -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+  }
+
+  .menu-btn .bar { width: 20px; height: 3px; background: var(--green); }
+  .menu-btn:hover { border-color: var(--green-dim); }
+
+  /* ── Menu overlay ── */
+  .menu-overlay {
+    position: fixed; top: 0; right: 0;
+    width: 78%; max-width: 300px; height: 100%;
+    background: var(--bg2); border-left: 1px solid var(--green-dim);
+    transform: translateX(100%); transition: transform 0.25s ease;
+    z-index: 50; padding: 20px;
+  }
+
+  .menu-overlay.open { transform: translateX(0); }
+
+  .menu-overlay .close-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--line); background: none;
+    color: var(--green); font-family: 'Share Tech Mono', monospace;
+    font-size: 16px; margin-bottom: 24px; cursor: pointer;
+  }
+
+  .menu-overlay nav a {
+    display: block; padding: 14px 4px;
+    border-bottom: 1px solid var(--line);
+    color: var(--text); text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px; letter-spacing: 0.05em; font-weight: 700;
+  }
+
+  /* ── 中央コンテナ（グリッド非表示） ── */
+  .page-inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: var(--bg);
+    position: relative;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    margin-top: 45px;
+  }
+
+  .page-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    color: var(--green-dim); letter-spacing: 0.2em; margin-bottom: 8px;
+  }
+
+  .page-title {
+    font-size: 24px; font-weight: 900; letter-spacing: 0.04em;
+  }
+
+  .page-title .accent { color: var(--green); }
+
+  .page-title .strike {
+    position: relative;
+    color: var(--text-dim);
+    display: inline-block;
+  }
+
+  .page-title .strike::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: 3px;
+    background: var(--green);
+    transform: translateY(-50%);
+  }
+
+  .page-title .pre {
+    color: var(--green);
+    margin-right: 10px;
+  }
+
+  /* ── Control bar（固定） ── */
+  .control-bar {
+    position: sticky;
+    top: 62px;
+    z-index: 20;
+  }
+
+  .control-bar-inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 14px 20px;
+    background: rgba(10,14,12,0.97);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .control-row {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: nowrap; overflow-x: auto;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px;
+  }
+  .control-row::-webkit-scrollbar { display: none; }
+
+  .control-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px; color: var(--green-dim);
+    letter-spacing: 0.1em; flex-shrink: 0; width: 64px; font-weight: 700;
+  }
+
+  .chip-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px; padding: 10px 16px; min-height: 40px;
+    border: 1px solid var(--line); background: var(--bg);
+    color: var(--text-dim); font-weight: 700; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0; transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .chip-btn:hover { border-color: var(--green-dim); color: var(--text); }
+  .chip-btn.active { background: var(--green); color: #06120c; border-color: var(--green); }
+
+  .sort-row { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  .sort-buttons { display: flex; gap: 6px; align-items: center; }
+
+  .sort-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px; padding: 10px 14px; min-height: 40px;
+    border: 1px solid var(--line); background: var(--bg);
+    color: var(--text-dim); font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sort-btn.active { border-color: var(--green); color: var(--green); background: rgba(125,255,194,0.06); }
+
+  .result-count {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; font-weight: 700; color: var(--text-dim); flex-shrink: 0;
+  }
+
+  /* ── Gallery ── */
+  .content {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 20px 20px 70px;
+    background: var(--bg);
+  }
+
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  @media (min-width: 1024px) {
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .tweet-card {
+    background: var(--bg2); border: 1px solid var(--line);
+    overflow: hidden; transition: border-color 0.15s;
+  }
+
+  .tweet-card:hover { border-color: var(--green); }
+
+  .embed-wrapper {
+    padding: 0;
+    min-height: 120px;
+    overflow: hidden;
+  }
+
+  /* Xのiframeはmax-widthで封じる */
+  .embed-wrapper iframe {
+    max-width: 100% !important;
+    display: block;
+    margin: 0 !important;
+  }
+
+  .embed-wrapper .twitter-tweet {
+    width: 100% !important;
+    max-width: 542px !important;
+    margin: 0 !important;
+  }
+
+  .tweet-placeholder { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+
+  .skeleton-line {
+    height: 10px; background: var(--line); border-radius: 2px;
+    overflow: hidden; position: relative;
+  }
+
+  .skeleton-line::after {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(125,255,194,0.15), transparent);
+    animation: shimmer 1.4s infinite;
+  }
+
+  @keyframes shimmer { 100% { left: 100%; } }
+
+  .skeleton-line.w60 { width: 60%; }
+  .skeleton-line.w90 { width: 90%; }
+  .skeleton-line.w40 { width: 40%; }
+
+  .card-meta {
+    padding: 8px 12px 10px; display: flex; align-items: center;
+    gap: 6px; flex-wrap: wrap; border-top: 1px solid var(--line);
+  }
+
+  .tag-pill {
+    font-family: 'Share Tech Mono', monospace; font-size: 11px; font-weight: 700;
+    padding: 3px 8px; border: 1px solid var(--green); color: var(--green); letter-spacing: 0.05em;
+  }
+
+  .date-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 11px; font-weight: 700;
+    color: var(--text-dim); margin-left: auto;
+  }
+
+  #status {
+    text-align: center; padding: 3rem 1rem;
+    color: var(--text-dim); font-family: 'Share Tech Mono', monospace;
+    font-size: 13px; font-weight: 700;
+  }
+
+  .error-box {
+    border: 1px solid #6e2c2c; background: #150a0a; padding: 1.25rem;
+    font-family: 'Share Tech Mono', monospace; font-size: 12px; font-weight: 700;
+    color: #ff8a8a; text-align: center;
+  }
+
+  .error-box code {
+    display: block; margin-top: 8px; font-size: 10px;
+    color: var(--text-dim); word-break: break-all;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">UNOFFICIAL FAN ARCHIVE<span> HAMMER COLLECTIVE</span></div>
+    <button class="menu-btn" onclick="document.getElementById('menuOverlay').classList.add('open')" aria-label="メニューを開く">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+  </div>
+</div>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="close-btn mono" onclick="document.getElementById('menuOverlay').classList.remove('open')">×</button>
+  <nav>
+    <a href="index.html">TOP</a>
+    <a href="#">OFFICIAL</a>
+    <a href="#">ARTIST</a>
+    <a href="post_gallery.html">TWEET GALLERY</a>
+    <a href="#">PRESS</a>
+    <a href="#">TIE-UP WORKS</a>
+    <a href="#">RELATED CREATORS</a>
+    <a href="#">HISTORY</a>
+  </nav>
+</div>
+
+<div class="page-header">
+  <div class="page-inner">
+    <div class="page-tag mono">UNOFFICIAL FAN ARCHIVE</div>
+    <h1 class="page-title"><span class="pre">POST</span><span class="strike">TWEET</span> <span class="accent">ARCHIVE</span></h1>
+  </div>
+</div>
+
+<div class="control-bar" id="controlBar">
+  <div class="control-bar-inner">
+    <div class="control-row">
+      <span class="control-label mono">TAG</span>
+      <button class="chip-btn active" data-tag="all" onclick="setTag(this)">ALL</button>
+      <span id="tag-buttons"></span>
+    </div>
+    <div class="control-row">
+      <span class="control-label mono">YEAR</span>
+      <button class="chip-btn active" data-year="all" onclick="setYear(this)">ALL</button>
+      <span id="year-buttons"></span>
+    </div>
+    <div class="sort-row">
+      <div class="sort-buttons">
+        <span class="control-label mono" style="width:auto;">SORT</span>
+        <button class="sort-btn active" data-order="desc" onclick="setSort(this)">▼ NEW</button>
+        <button class="sort-btn" data-order="asc" onclick="setSort(this)">▲ OLD</button>
+      </div>
+      <span class="result-count mono" id="result-count"></span>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div id="status">LOADING ARCHIVE DATA...</div>
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<script>
+  const SHEET_CSV_URL = 'https://ryodanin-archive-suikajuice.workers.dev/api/posts';
+
+  let allTweets = [], currentTag = 'all', currentYear = 'all', currentOrder = 'desc';
+
+  async function loadTweets() {
+    try {
+      const res = await fetch(SHEET_CSV_URL);
+      if (!res.ok) throw new Error('シートの読み込みに失敗しました (HTTP ' + res.status + ')');
+      const text = await res.text();
+      allTweets = parseCSV(text);
+      if (allTweets.length === 0) throw new Error('データが0件でした。');
+      buildFilters();
+      applyFiltersAndRender();
+    } catch (e) {
+      document.getElementById('status').innerHTML = `<div class="error-box">ARCHIVE LOAD FAILED<br>スプレッドシートを読み込めませんでした。<code>${e.message}</code></div>`;
+    }
+  }
+
+  function parseCSV(text) {
+    const rows = []; let row = [], field = '', inQuotes = false;
+    text = text.replace(/^\uFEFF/, '');
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i], next = text[i + 1];
+      if (inQuotes) {
+        if (c === '"' && next === '"') { field += '"'; i++; }
+        else if (c === '"') { inQuotes = false; }
+        else { field += c; }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { row.push(field); field = ''; }
+        else if (c === '\r') {}
+        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+        else { field += c; }
+      }
+    }
+    if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+    return rows.slice(1).filter(r => r.length >= 3 && r[1]).map(r => ({
+      date: (r[0] || '').trim(), tweet_url: (r[1] || '').trim(), tag: (r[2] || '').trim()
+    }));
+  }
+
+  function parseJpDate(str) {
+    if (!str) return null;
+    const m = str.match(/(\d{4})[年\/\-](\d{1,2})[月\/\-](\d{1,2})/);
+    if (m) return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+    const t = Date.parse(str); return isNaN(t) ? null : new Date(t);
+  }
+
+  function getYear(dateStr) { const d = parseJpDate(dateStr); return d ? String(d.getFullYear()) : '不明'; }
+  function getTagList(tagStr) { return (tagStr || '').split(',').map(t => t.trim()).filter(Boolean); }
+
+  function buildFilters() {
+    const tagSet = new Set();
+    allTweets.forEach(t => getTagList(t.tag).forEach(tag => tagSet.add(tag)));
+    const tagContainer = document.getElementById('tag-buttons');
+    [...tagSet].sort().forEach(tag => {
+      const btn = document.createElement('button');
+      btn.className = 'chip-btn'; btn.dataset.tag = tag; btn.textContent = tag;
+      btn.onclick = function() { setTag(this); }; tagContainer.appendChild(btn);
+    });
+    const yearContainer = document.getElementById('year-buttons');
+    [...new Set(allTweets.map(t => getYear(t.date)))].sort().reverse().forEach(year => {
+      const btn = document.createElement('button');
+      btn.className = 'chip-btn'; btn.dataset.year = year; btn.textContent = year;
+      btn.onclick = function() { setYear(this); }; yearContainer.appendChild(btn);
+    });
+  }
+
+  function setTag(btn) {
+    document.querySelectorAll('.control-row:nth-of-type(1) .chip-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); currentTag = btn.dataset.tag; applyFiltersAndRender();
+  }
+
+  function setYear(btn) {
+    document.querySelectorAll('.control-row:nth-of-type(2) .chip-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); currentYear = btn.dataset.year; applyFiltersAndRender();
+  }
+
+  function setSort(btn) {
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); currentOrder = btn.dataset.order; applyFiltersAndRender();
+  }
+
+  function tweetUrlToId(url) { const m = (url || '').match(/status\/(\d+)/); return m ? m[1] : null; }
+
+  function applyFiltersAndRender() {
+    let filtered = allTweets.filter(t => {
+      const tags = getTagList(t.tag);
+      return (currentTag === 'all' || tags.includes(currentTag)) &&
+             (currentYear === 'all' || getYear(t.date) === currentYear);
+    });
+    filtered.sort((a, b) => {
+      const ta = parseJpDate(a.date)?.getTime() || 0, tb = parseJpDate(b.date)?.getTime() || 0;
+      return currentOrder === 'desc' ? tb - ta : ta - tb;
+    });
+    renderGallery(filtered);
+  }
+
+  function renderGallery(tweets) {
+    const gallery = document.getElementById('gallery');
+    const status = document.getElementById('status');
+    const countEl = document.getElementById('result-count');
+    gallery.innerHTML = ''; status.textContent = '';
+    countEl.textContent = `${tweets.length} ITEMS`;
+    if (tweets.length === 0) { status.textContent = 'NO MATCHING RECORDS.'; return; }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { loadSingleTweet(entry.target); observer.unobserve(entry.target); } });
+    }, { rootMargin: '300px 0px' });
+
+    tweets.forEach(tweet => {
+      const id = tweetUrlToId(tweet.tweet_url); if (!id) return;
+      const card = document.createElement('div');
+      card.className = 'tweet-card'; card.dataset.tweetUrl = tweet.tweet_url;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'embed-wrapper';
+      wrapper.innerHTML = `<div class="tweet-placeholder"><div class="skeleton-line w40"></div><div class="skeleton-line w90"></div><div class="skeleton-line w60"></div></div>`;
+      const meta = document.createElement('div');
+      meta.className = 'card-meta';
+      const tagsHtml = getTagList(tweet.tag).map(t => `<span class="tag-pill mono">${t}</span>`).join('');
+      meta.innerHTML = `${tagsHtml}<span class="date-label mono">${tweet.date || ''}</span>`;
+      card.appendChild(wrapper); card.appendChild(meta); gallery.appendChild(card); observer.observe(card);
+    });
+  }
+
+  function loadSingleTweet(card) {
+    const url = card.dataset.tweetUrl;
+    const wrapper = card.querySelector('.embed-wrapper');
+    wrapper.innerHTML = '';
+    const blockquote = document.createElement('blockquote');
+    blockquote.className = 'twitter-tweet';
+    blockquote.setAttribute('data-dnt', 'true'); blockquote.setAttribute('data-theme', 'dark');
+    blockquote.setAttribute('data-width', '540');
+    const a = document.createElement('a'); a.href = url;
+    blockquote.appendChild(a); wrapper.appendChild(blockquote);
+    if (window.twttr && window.twttr.widgets) { window.twttr.widgets.load(wrapper); }
+  }
+
+  document.addEventListener('click', function(e) {
+    const overlay = document.getElementById('menuOverlay');
+    if (overlay.classList.contains('open') && !overlay.contains(e.target) && !e.target.closest('.menu-btn')) {
+      overlay.classList.remove('open');
+    }
+  });
+
+  window.addEventListener('load', loadTweets);
+</script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</body>
+</html>
